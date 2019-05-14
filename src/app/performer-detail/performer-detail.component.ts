@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { AuthService } from './../auth/auth.service';
 import { PerformerService } from './../performer/performer.service';
 import { Performer } from '../performer/performer';
@@ -20,8 +21,9 @@ export class PerformerDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.performerId = Number(this.route.snapshot.paramMap.get('id'));
-    this.videos = this.performerService.getPerformerVideos(this.performerService.getCurrentPerformer());
+    this.performerService.getCurrentPerformer().subscribe(performer => {
+      this.videos = this.performerService.getPerformerVideos(performer);
+    });
   }
 
   onSelect(video: Video): void {

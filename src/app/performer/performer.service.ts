@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, from, BehaviorSubject } from 'rxjs';
 
 import { Performer } from './performer';
 import { Video } from './video';
@@ -11,9 +11,9 @@ import { VIDEOS } from './mock-performers';
 })
 export class PerformerService {
 
-  currentPerformer = null;
+  private currentPerformer: BehaviorSubject<Performer> = new BehaviorSubject(null);
 
-  private data: BehaviorSubject<Video> = new BehaviorSubject(null);
+  private currentVideo: BehaviorSubject<Video> = new BehaviorSubject(null);
 
   constructor() { }
 
@@ -21,25 +21,30 @@ export class PerformerService {
     return PERFORMERS;
   }
 
-  getCurrentPerformer() : Performer {
+  getCurrentPerformer() : Observable<Performer> {
     return this.currentPerformer;
   }
 
-  getCurrentVideo() : Observable<Video> {
-    return this.data;
-  }
-
-  setCurrentVideo(video: Video): void {
-    this.data.next(video);
-  }
-
-  setCurrentPerformer(performer : Performer) {
-    this.currentPerformer = performer;
-    var videos = this.getPerformerVideos(performer);
+ setCurrentPerformer(performer : Performer) {
+    this.currentPerformer.next(performer);
+    var videos = [];
+    for (var i in VIDEOS) {
+      if ( performer.id == VIDEOS[i].performer_id ) {
+        videos.push(VIDEOS[i]);
+      }
+    }
     this.setCurrentVideo(videos[0]);
   }
 
-  getPerformerVideos(performer : Performer): Video[] {
+  getCurrentVideo() : Observable<Video> {
+    return this.currentVideo;
+  }
+
+  setCurrentVideo(video: Video): void {
+    this.currentVideo.next(video);
+  }
+
+  getPerformerVideos(performer : Performer): Video[]{
     var videos = [];
     for (var i in VIDEOS) {
       if ( performer.id == VIDEOS[i].performer_id ) {
