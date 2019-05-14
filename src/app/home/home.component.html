@@ -1,0 +1,54 @@
+<div id="spectator-page" class="uk-grid" *ngIf="auth.isAuthenticated()">
+  <!-- Vertical Nav -->
+  <div class="uk-width-1-5">
+
+    <!-- Panel Box -->
+    <div class="uk-panel uk-panel-box uk-height-viewport" ng-controller="PerformerController">
+
+      <!-- Profile Area -->
+      <p class="uk-text-center"><img src="{{ auth?.userProfile?.picture }}"></p>
+      <p class="uk-text-center">{{ auth?.userProfile?.name }}</p>
+      <p class="uk-text-center">Lorem ipsum dolor sit amet, consetetur sadipscing elitr. </p>
+
+      <hr>
+
+      <!-- Accordions-->
+      <ul class="uk-nav uk-nav-parent-icon uk-nav-side" data-uk-nav="{multiple:true}">
+        <li class="uk-parent"><a href="#">Competition Detail</a>
+          <ul class="uk-nav-sub">
+            <li>
+              <div class="uk-panel uk-panel-box">
+                Rules:<br>
+                Details:<br>
+              </div>
+            </li>
+          </ul>
+        </li>
+
+        <li class="uk-parent"><a href="#">Performers</a>
+          <ul class="performers">
+            <li *ngFor="let performer of performers" (click)="onSelect(performer)">
+              <a href="" [routerLink]="">{{performer.name}} - {{performer.votes}}</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <hr>
+
+      <a href='#' (click)="auth.logout()">Exit</a>
+
+    </div>
+  </div>
+
+  <!-- Main Area -->
+
+  <div *ngIf="selectedPerformer" class="uk-width-4-5">
+      <performer-video></performer-video>
+      <hr>
+      <performer-detail></performer-detail>
+  </div>
+
+</div>
+
+

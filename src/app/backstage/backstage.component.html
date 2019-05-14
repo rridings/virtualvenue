@@ -1,0 +1,14 @@
+<h4 *ngIf="auth.isAuthenticated()">
+  Welcome Backstage
+</h4>
+
+<div class="container-fluid" style="text-align: center;" *ngIf="auth.isAuthenticated()">
+  <form class="form-inline">
+    <button id="qsLogoutBtn"
+      class="btn btn-primary my-2 my-sm-0"
+      (click)="auth.logout()" type="button">
+        Exit
+    </button>
+  </form>
+</div>
+
