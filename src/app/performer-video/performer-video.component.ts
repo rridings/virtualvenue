@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from './../auth/auth.service';
-import { PerformerService } from './../performer/performer.service';
-import { Performer } from '../performer/performer';
-import { Video } from '../performer/video';
+import { AuthService } from 'app/auth/auth.service';
+import { VideosService } from 'app/services/videos.service';
+import { Video } from 'app/model/video';
 
 @Component({
   selector: 'performer-video',
@@ -14,14 +13,12 @@ import { Video } from '../performer/video';
 })
 export class PerformerVideoComponent implements OnInit {
 
-  private url: BehaviorSubject<String> = new BehaviorSubject(null);
+  currentVideoUrl$ : Observable<string>;
 
-  constructor(public performerService: PerformerService, public auth: AuthService, private route: ActivatedRoute){
+  constructor(public videosService: VideosService, public auth: AuthService, private route: ActivatedRoute){
   }
 
   ngOnInit() {
-    this.performerService.getCurrentVideo().subscribe(video => {
-      this.url.next(video.url);
-    });
+    this.currentVideoUrl$ = this.videosService.currentVideoUrl$;
   }
 }

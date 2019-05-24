@@ -1,0 +1,17 @@
+<div *ngIf="videos$" class="uk-grid-small uk-child-width-expand@s uk-text-center" ukgrid>
+  <!--{{#each videos}}-->
+    <div class="video uk-card uk-card-default uk-card-body" *ngFor="let video of videos$ | async" (click)="onSelect(video)">
+      <figure>
+        <img class="videoThumb" id="{{video.id}}" src="{{video?.image_url}}">
+      </figure>
+      <h4 class="videoTitle">{{video?.title}}</h4>
+    </div>
+
+  <!--{{/each}}-->
+</div>
+
+
+
+
+
+

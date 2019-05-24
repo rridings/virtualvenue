@@ -1,6 +1,6 @@
 export class Video {
-  id: number;
-  performer_id: number;
+  id: string;
+  performer_id: string;
   title: string;
   url: string;
   image_url : string;

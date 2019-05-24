@@ -1,5 +1,5 @@
 export class Performer {
-  id: number;
+  id: string;
   name: string;
   votes: number;
 }

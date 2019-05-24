@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './../auth/auth.service';
-import { PerformerService } from './../performer/performer.service';
-import { Performer } from '../performer/performer';
+import { Observable } from 'rxjs';
+import { AuthService } from 'app/auth/auth.service';
+import { PerformersService } from 'app/services/performers.service';
+import { VideosService } from 'app/services/videos.service';
+import { Performer } from 'app/model/performer';
 
 @Component({
   selector: 'app-home',
@@ -11,24 +13,23 @@ import { Performer } from '../performer/performer';
               '../../../node_modules/uikit/dist/css/uikit-core.min.css']
 })
 export class HomeComponent implements OnInit {
-
-  selectedPerformer: Performer;
-
-  performers: Performer[];
-
-  constructor(public auth: AuthService, public performerService: PerformerService) { }
+  loading$: Observable<boolean>;
+  performers$: Observable<Performer[]>;
+  noResults$: Observable<boolean>; 
+  currentPerformer$: Observable<string>;
+  
+  constructor(public auth: AuthService, private performers: PerformersService, private videos: VideosService) { }
 
   ngOnInit() {
-    this.getPerformers();
+    this.loading$ = this.performers.loading$;
+    this.noResults$ = this.performers.noResults$;
+    this.performers$ = this.performers.performers$;
+    this.currentPerformer$ = this.performers.currentPerformer$;
   }
 
-  getPerformers(): void {
-    this.performers = this.performerService.getPerformers();
-  }
-
-  onSelect(performer: Performer): void {
-    this.selectedPerformer = performer;
-    this.performerService.setCurrentPerformer(performer);
+  onSelect(performerId: string): void {
+    this.videos.init(performerId);
+    this.performers.currentPerformer = performerId;
   }
 
 }
