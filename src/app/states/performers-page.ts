@@ -4,6 +4,6 @@ export interface PerformersPage {
    loading: boolean;
    performers: Performer[];
    formStatus: string;
-   currentPerformer: string;
+   currentPerformer: Performer;
    totalPerformers: number;
 }

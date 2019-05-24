@@ -28,7 +28,7 @@
         <li class="uk-parent"><a href="#">Performers</a>
           <ul class="performers">
             <li *ngFor="let performer of performers$ | async">
-              <a href="" (click)="onSelect(performer.id)" [routerLink]="">{{performer.name}} - {{performer.votes}}</a>
+              <a href="" (click)="onSelect(performer)" [routerLink]="">{{performer.name}} - {{performer.votes}}</a>
             </li>
           </ul>
         </li>
@@ -44,6 +44,8 @@
   <!-- Main Area -->
 
   <div class="uk-width-4-5" *ngIf="currentPerformer$ | async">
+      <p class="uk-text-center uk-h2">{{(currentPerformer$ | async)?.name}}</p>  
+      <p class="uk-text-center">{{(currentPerformer$ | async)?.bio}}</p>
       <performer-video></performer-video>
       <hr>
       <performer-video-list></performer-video-list>

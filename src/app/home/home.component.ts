@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
   loading$: Observable<boolean>;
   performers$: Observable<Performer[]>;
   noResults$: Observable<boolean>; 
-  currentPerformer$: Observable<string>;
+  currentPerformer$: Observable<Performer>;
   
   constructor(public auth: AuthService, private performers: PerformersService, private videos: VideosService) { }
 
@@ -27,9 +27,9 @@ export class HomeComponent implements OnInit {
     this.currentPerformer$ = this.performers.currentPerformer$;
   }
 
-  onSelect(performerId: string): void {
-    this.videos.init(performerId);
-    this.performers.currentPerformer = performerId;
+  onSelect(performer: Performer): void {
+    this.videos.init(performer.id);
+    this.performers.currentPerformer = performer;
   }
 
 }

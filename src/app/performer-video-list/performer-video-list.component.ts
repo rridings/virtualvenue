@@ -22,9 +22,9 @@ export class PerformerVideoListComponent implements OnInit {
   ngOnInit() {
     this.loading$ = this.videosService.loading$;
     this.videos$ = this.videosService.videos$;
-    this.performersService.currentPerformer$.pipe(map((performerId) => { 
-      console.log("Init VideosService with performer - " + performerId);
-      this.videosService.init(performerId);
+    this.performersService.currentPerformer$.pipe(map((performer) => { 
+      console.log("Init VideosService with performer - " + performer.name);
+      this.videosService.init(performer.id);
     }));
   }
 

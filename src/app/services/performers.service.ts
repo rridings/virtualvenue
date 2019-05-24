@@ -21,7 +21,6 @@ export class PerformersService {
           loading: false,
           performers,
           totalPerformers: performers.length,
-          currentPerformer : ''
         }, `performers collection subscription`)
       })
     ).subscribe()
@@ -51,12 +50,12 @@ export class PerformersService {
     return this.store.state$.pipe(map(state => state.totalPerformers))
   }
 
-  get currentPerformer$() : Observable<string> { 
+  get currentPerformer$() : Observable<Performer> { 
     return this.store.state$.pipe(map(state => state.currentPerformer))
   }
   
-  set currentPerformer(performerId : string) {
-    this.store.patch({ currentPerformer : performerId }, "set current performer");
+  set currentPerformer(performer : Performer) {
+    this.store.patch({ currentPerformer : performer }, "set current performer - " + performer.name);
   }
   
   create(performer: Performer) {
