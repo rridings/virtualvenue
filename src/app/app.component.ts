@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './auth/auth.service';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { CompetitionsService } from 'app/services/competitions.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +10,9 @@ import { AuthService } from './auth/auth.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(public auth: AuthService) {
+  competitionName$ : Observable<string>;
+  
+  constructor(public competitionsService: CompetitionsService, public auth: AuthService) {
     auth.handleAuthentication();
     auth.scheduleRenewal();
   }
@@ -17,6 +21,7 @@ export class AppComponent implements OnInit {
     if (localStorage.getItem('isLoggedIn') === 'true') {
       this.auth.renewTokens();
     }
+    
+    this.competitionName$ = this.competitionsService.name$;
   }
-
 }
