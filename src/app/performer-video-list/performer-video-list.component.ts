@@ -29,6 +29,7 @@ export class PerformerVideoListComponent implements OnInit {
   }
 
   onSelect(video: Video): void {
+    console.log("Selected video - " + video.url);
     this.videosService.currentVideoUrl = video.url;
   }
 }

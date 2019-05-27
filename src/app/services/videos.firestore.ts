@@ -7,6 +7,6 @@ import { Video } from 'app/model/video';
 })
 export class VideosFirestore extends FirestoreService<Video> {
 
-    protected basePath: string = 'videos';
+    protected basePath: string = 'cville-videos';
 
 }

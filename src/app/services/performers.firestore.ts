@@ -7,6 +7,6 @@ import { Performer } from 'app/model/performer';
 })
 export class PerformersFirestore extends FirestoreService<Performer> {
 
-    protected basePath: string = 'performers';
+    protected basePath: string = 'cville-performers';
 
 }

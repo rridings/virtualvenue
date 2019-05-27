@@ -20,4 +20,5 @@
   .video figure {
     height: 0;
     padding-bottom: 60%;
+    cursor: pointer;
   }
