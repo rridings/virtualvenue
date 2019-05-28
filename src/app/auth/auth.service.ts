@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AUTH_CONFIG } from './auth0-variables';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { of as observableOf} from 'rxjs';
 import { timer as observableTimer} from 'rxjs';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/filter';
+import { take } from "rxjs/operators";
 import * as auth0 from 'auth0-js';
 import { ENV } from './../core/env.config';
+import { UserService } from 'app/services/user.service';
+import { Role } from 'app/model/role';
+import { User } from 'app/model/user';
 
 @Injectable()
 export class AuthService {
@@ -16,10 +18,8 @@ export class AuthService {
   private _idToken: string;
   private _accessToken: string;
   private _expiresAt: number;
-  
-  userRef = this.db.collection('users');
    
-  userProfile: any;
+  user: User;
   refreshSubscription: any;
 
   auth0 = new auth0.WebAuth({
@@ -30,7 +30,7 @@ export class AuthService {
     scope: 'openid email profile'
   });
 
-  constructor(public router: Router, public db: AngularFirestore) {
+  constructor(public router: Router, public userService : UserService) {
     this._idToken = '';
     this._accessToken = '';
     this._expiresAt = 0;
@@ -78,18 +78,20 @@ export class AuthService {
         return;
       }
 
-      if (profile) {
-        self.userProfile = profile;
-        self.findUserByEmail(profile.email).then(data => {
+      if (!self.user && profile) {
+        var subscription = self.userService.getUser(profile.email).pipe(take(1)).subscribe( data => {
           if ( data ) {
-            self.userProfile.name = data.name;
-            self.userProfile.picture = data.picture;
-            self.userProfile.last_login = Date.now();
-            self.updateUser(self.userProfile);
+            self.user = data;
+            self.user.last_login = Date.now();
+            self.userService.updateUser(self.user);
           }
           else {
-            profile.last_login = Date.now();
-            self.createUser(profile);
+            self.user = new User();
+            self.user.id = profile.email;
+            self.user.picture = profile.picture;
+            self.user.name = profile.name;
+            self.user.last_login = Date.now();
+            self.userService.createUser(self.user);
           }
         });
       }
@@ -107,7 +109,6 @@ export class AuthService {
 
     this.scheduleRenewal();
     
-     
     this.getProfile();
   }
 
@@ -121,7 +122,7 @@ export class AuthService {
     this.unscheduleRenewal();
     // Go back to the home route
     this.router.navigate(['/']);
-    this.userProfile = null;
+    this.user = null;
   }
 
   public renewTokens(): void {
@@ -171,32 +172,5 @@ export class AuthService {
   public unscheduleRenewal() {
     if(!this.refreshSubscription) return;
     this.refreshSubscription.unsubscribe();
-  }
-  
-  createUser(profile) {
-    this.db.collection('users').doc(profile.email).set
-    ({'name': profile.name, 'picture': profile.picture});
-  }    
-  
-  updateUser(profile) {
-    this.db.collection('users').doc(profile.email).set
-    ({'name': profile.name, 'picture': profile.picture, 'last_login':profile.last_login});
-  }    
-  
-  findUserByEmail(email) {
-     return this.db.collection("users")
-            .doc(email)
-            .ref
-            .get().then(function(doc) {
-                if (doc.exists) {
-                    console.log("Document data:", doc.data());
-                } else {
-                    console.log("No such document!");
-                }
-                
-                return doc.data();
-            }).catch(function(error) {
-                console.log("Error getting document:", error);
-            });
   }
 }

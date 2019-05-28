@@ -60,7 +60,7 @@ export class PerformersService {
   
   create(performer: Performer) {
     this.store.patch({ loading: true, performers: [], formStatus: 'Saving...' }, "performer create")
-    return this.firestore.create(performer).then(_ => {
+    return this.firestore.add(performer).then(_ => {
       this.store.patch({ formStatus: 'Saved!' }, "employee create SUCCESS")
       setTimeout(() => this.store.patch({ formStatus: '' }, "performer create timeout reset formStatus"), 2000)
     }).catch(err => {

@@ -53,7 +53,7 @@ export class VideosService {
       
   create(video: Video) {
     this.store.patch({ loading: true, videos: [], formStatus: 'Saving...' }, "video create")
-    return this.firestore.create(video).then(_ => {
+    return this.firestore.add(video).then(_ => {
       this.store.patch({ formStatus: 'Saved!' }, "video create SUCCESS")
       setTimeout(() => this.store.patch({ formStatus: '' }, "video create timeout reset formStatus"), 2000)
     }).catch(err => {

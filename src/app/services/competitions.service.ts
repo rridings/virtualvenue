@@ -5,7 +5,6 @@ import { Observable, from, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { Competition } from '../model/competition';
 
-
 @Injectable({
   providedIn: 'root'
 })

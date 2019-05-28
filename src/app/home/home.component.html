@@ -6,8 +6,8 @@
     <div class="uk-panel uk-panel-box uk-height-viewport" ng-controller="PerformerController">
 
       <!-- Profile Area -->
-      <p class="uk-text-center"><img src="{{ auth?.userProfile?.picture }}"></p>
-      <p class="uk-text-center">{{ auth?.userProfile?.name }}</p>
+      <p class="uk-text-center"><img src="{{ auth?.user?.picture }}"></p>
+      <p class="uk-text-center">{{ auth?.user?.name }}</p>
       <p class="uk-text-center">Lorem ipsum dolor sit amet, consetetur sadipscing elitr. </p>
 
       <hr>
@@ -28,7 +28,7 @@
         <li class="uk-parent"><a href="#">Performers</a>
           <ul class="performers">
             <li *ngFor="let performer of performers$ | async">
-              <a href="" (click)="onSelect(performer)" [routerLink]="">{{performer.name}} - {{performer.votes}}</a>
+              <a href="" (click)="onSelect(performer)" [routerLink]="">{{performer.name}}</a>
             </li>
           </ul>
         </li>
