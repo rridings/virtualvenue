@@ -65,7 +65,17 @@ export class AuthService {
     });
   }
 
-  public getProfile(): void {
+  private localLogin(authResult): void {
+    // Set isLoggedIn flag in localStorage
+    localStorage.setItem('isLoggedIn', 'true');
+    // Set the time that the access token will expire at
+    const expiresAt = (authResult.expiresIn * 1000) + Date.now();
+    this._accessToken = authResult.accessToken;
+    this._idToken = authResult.idToken;
+    this._expiresAt = expiresAt;
+
+    this.scheduleRenewal();
+    
     if (!this._accessToken) {
       throw new Error('Access token must exist to fetch profile');
     }
@@ -79,37 +89,48 @@ export class AuthService {
       }
 
       if (!self.user && profile) {
-        var subscription = self.userService.getUser(profile.email).pipe(take(1)).subscribe( data => {
-          if ( data ) {
-            self.user = data;
+        var getUserSubscription = self.userService.getUser(profile.email).subscribe( user => {
+          if ( user ) {
+            self.user = user;
             self.user.last_login = Date.now();
             self.userService.updateUser(self.user);
+            
+            var getRoleSubscription = self.userService.getRole(self.user.id).pipe(take(1)).subscribe( role => {
+              if ( role ) {
+                self.user.type = role.type;
+              }
+              getRoleSubscription.unsubscribe();
+            });
+            
           }
           else {
             self.user = new User();
-            self.user.id = profile.email;
+            self.user.email = profile.email;
             self.user.picture = profile.picture;
             self.user.name = profile.name;
             self.user.last_login = Date.now();
-            self.userService.createUser(self.user);
+            self.userService.createUser(self.user).then(function(user) {
+              if ( user ) {
+                self.user.id = user.id;
+                
+                var role = new Role();
+                role.user = self.user.id;
+                if ( localStorage.getItem('route') == '/backstage' ) {
+                  role.type = 3
+                }
+                else {
+                  role.type = 1
+                }
+            
+                self.userService.createRole(role);
+              }
+            });
           }
+          
+          getUserSubscription.unsubscribe();
         });
       }
     });
-  }
-
-  private localLogin(authResult): void {
-    // Set isLoggedIn flag in localStorage
-    localStorage.setItem('isLoggedIn', 'true');
-    // Set the time that the access token will expire at
-    const expiresAt = (authResult.expiresIn * 1000) + Date.now();
-    this._accessToken = authResult.accessToken;
-    this._idToken = authResult.idToken;
-    this._expiresAt = expiresAt;
-
-    this.scheduleRenewal();
-    
-    this.getProfile();
   }
 
   public logout(): void {

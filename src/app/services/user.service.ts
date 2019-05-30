@@ -1,8 +1,10 @@
 import { UserFirestore } from './user.firestore';
+import { RolesFirestore } from './roles.firestore';
 import { Injectable } from '@angular/core';
 import { Observable, from, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { User } from '../model/user';
+import { Role } from '../model/role';
 
 
 @Injectable({
@@ -11,32 +13,31 @@ import { User } from '../model/user';
 export class UserService {
 
   constructor(
-    private firestore: UserFirestore
+    private userFirestore: UserFirestore,
+    private rolesFirestore: RolesFirestore
   ) {}
   
   createUser(user: User) {
-    return this.firestore.add(user);
+    return this.userFirestore.add(user);
   }
 
   updateUser(user: User) {
-    this.firestore.update(user.id, user); 
+    this.userFirestore.update(user.id, user); 
   }
   
   deleteUser(id: string): any {
-    return this.firestore.delete(id);
+    return this.userFirestore.delete(id);
   }
   
-  getUser(id: string) {
-    return this.firestore.doc$(id);
+  getUser(email: string) : Observable<User> {
+    return this.userFirestore.collection$(ref => ref.where('email', '==', email).limit(1)).pipe(map( users => { return users[0] } ));
+  }
+   
+  createRole(role: Role) {
+    return this.rolesFirestore.add(role);
   }
     
-  findRole(user_id) {
-//    return this.firestore.collection$("cville-roles", ref => ref.where('user', '==', user_id))
-//      .ref
-//      .get().then(function(querySnapshot) {
-//        var data = querySnapshot.docs.map(function (documentSnapshot) {
-//          return documentSnapshot.data();
-//        });
-//      });
+  getRole(user_id) : Observable<Role> {
+    return this.rolesFirestore.collection$(ref => ref.where('user', '==', user_id).limit(1)).pipe(map( roles => { return roles[0] } ));
   }
 }
