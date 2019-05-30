@@ -97,7 +97,7 @@ export class AuthService {
             
             var getRoleSubscription = self.userService.getRole(self.user.id).pipe(take(1)).subscribe( role => {
               if ( role ) {
-                self.user.type = role.type;
+                self.user.role = role;
               }
               getRoleSubscription.unsubscribe();
             });
@@ -122,7 +122,11 @@ export class AuthService {
                   role.type = 1
                 }
             
-                self.userService.createRole(role);
+                self.userService.createRole(role).then(function(r) {
+                  if ( r ) {
+                    self.user.role = role;
+                  }
+                });
               }
             });
           }
