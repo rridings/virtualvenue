@@ -17,7 +17,7 @@ export class PerformerVideoListComponent implements OnInit {
   loading$: Observable<boolean>;
   videos$: Observable<Video[]>;
 
-  constructor(public auth: AuthService, private videosService: VideosService, private performersService: PerformersService) { }
+  constructor(public authService: AuthService, private videosService: VideosService, private performersService: PerformersService) { }
 
   ngOnInit() {
     this.loading$ = this.videosService.loading$;
@@ -31,5 +31,6 @@ export class PerformerVideoListComponent implements OnInit {
   onSelect(video: Video): void {
     console.log("Selected video - " + video.url);
     this.videosService.currentVideoUrl = video.url;
+    this.videosService.currentVideo = video;
   }
 }

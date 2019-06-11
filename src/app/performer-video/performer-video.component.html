@@ -9,15 +9,15 @@
   <div  class="uk-modal-footer uk-text-right" *ngIf="getCurrentUser().role.type == 2">
     <div class="uk-child-width-expand@s uk-text-center" uk-grid>
         <div>&nbsp;</div>  
-        <div>      
-          <label><input class="uk-radio" type="radio" value="1" [(ngModel)]="vote"> 1</label>
-          <label><input class="uk-radio" type="radio" value="2" [(ngModel)]="vote"> 2</label>
-          <label><input class="uk-radio" type="radio" value="3" [(ngModel)]="vote"> 3</label>
-          <label><input class="uk-radio" type="radio" value="4" [(ngModel)]="vote"> 4</label>
-          <label><input class="uk-radio" type="radio" value="5" [(ngModel)]="vote"> 5</label>
-          &nbsp;&nbsp;<button (click)="onCastVote(getCurrentUser().role)">Cast Vote</button>
+        <div *ngFor="let entry of entries; let idx = index">
+          <div style="float:left;height:50px;">
+            <label>
+              <input class="uk-radio" type="radio" [(ngModel)]="vote" [value]="entry.id"> {{ entry.id }}
+            </label>
+          </div>
         </div>
+        <div style="float:left;height:50px;padding-left: 10px;"><button (click)="onCastVote(getCurrentUser().role)">Cast Vote</button></div>
+      <div>&nbsp;</div>
     </div>
   </div>
-
 </div>

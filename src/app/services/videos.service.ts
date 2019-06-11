@@ -1,10 +1,11 @@
 import { VideosPageStore } from './videos-page.store';
 import { VideosFirestore } from './videos.firestore';
+import { VoteFirestore } from './vote.firestore';
 import { Injectable } from '@angular/core';
 import { Observable, from, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { Video } from '../model/video';
-
+import { Vote } from '../model/vote';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +14,16 @@ export class VideosService {
   
   private performer_id : string;
   
+  private _currentVideo = new BehaviorSubject(null);
+
   constructor(
-    private firestore: VideosFirestore,
+    private videoFirestore: VideosFirestore,
+    private voteFirestore: VoteFirestore,
     private store: VideosPageStore
   ) {}
   
   init(performer_id : string) {
-    this.firestore.collection$(ref => ref.where('performer_id', '==', performer_id)).pipe(
+    this.videoFirestore.collection$(ref => ref.where('performer_id', '==', performer_id)).pipe(
       tap(videos => {
         this.store.patch({
           loading: false,
@@ -51,9 +55,18 @@ export class VideosService {
     this.store.patch({ currentVideoUrl : url }, "set current video url");
   }
       
+  get currentVideo$() : Observable<Video> { 
+    return this._currentVideo;
+  }
+  
+  set currentVideo(video : Video) {
+    this._currentVideo.next(video);
+  }
+      
+        
   create(video: Video) {
     this.store.patch({ loading: true, videos: [], formStatus: 'Saving...' }, "video create")
-    return this.firestore.add(video).then(_ => {
+    return this.videoFirestore.add(video).then(_ => {
       this.store.patch({ formStatus: 'Saved!' }, "video create SUCCESS")
       setTimeout(() => this.store.patch({ formStatus: '' }, "video create timeout reset formStatus"), 2000)
     }).catch(err => {
@@ -63,8 +76,21 @@ export class VideosService {
 
   delete(id: string): any {
     this.store.patch({ loading: true, videos: [] }, "video delete")
-    return this.firestore.delete(id).catch(err => {
+    return this.videoFirestore.delete(id).catch(err => {
       this.store.patch({ loading: false, formStatus: 'An error ocurred' }, "video delete ERROR")
     })
   }
+  
+  castVote(vote: Vote) {
+    if ( vote.id != null ) {
+      this.voteFirestore.update(vote.id, vote);
+    }
+    else {
+      this.voteFirestore.add(vote);
+    }
+  }
+      
+  getVote(video_id : string, role_id : string) : Observable<Vote> {
+    return this.voteFirestore.collection$(ref => ref.where('video_id', '==', video_id).where('role_id', '==', role_id).limit(1)).pipe(map( votes => { return votes[0] } ));
+  }   
 }
