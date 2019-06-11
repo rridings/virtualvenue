@@ -3,4 +3,6 @@ export interface CompetitionsPage {
 
    loading: boolean;
    name: string;
+   currentRound: number;
+   rounds: number;
 }

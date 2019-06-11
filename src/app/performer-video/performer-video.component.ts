@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { map, flatMap } from 'rxjs/operators';
 import { AuthService } from 'app/auth/auth.service';
 import { VideosService } from 'app/services/videos.service';
+import { CompetitionsService } from 'app/services/competitions.service';
 import { Video } from 'app/model/video';
 import { Role } from 'app/model/role';
 import { User } from 'app/model/user';
@@ -20,16 +21,32 @@ export class PerformerVideoComponent implements OnInit {
 
   currentVideo$ : Observable<Video>;
   
+  currentRound$ : Observable<number>;
+  
+  canVote : boolean;
+  
   vote : number;
             
   entries = [];
-
-  constructor(public videosService: VideosService, public authService: AuthService, private route: ActivatedRoute){
+  
+  constructor(public competitionService: CompetitionsService, public videosService: VideosService, public authService: AuthService, private route: ActivatedRoute){
   }
 
   ngOnInit() {
     this.currentVideo$ = this.videosService.currentVideo$;
-       
+    
+    this.currentRound$ = this.competitionService.currentRound$;
+    
+    this.currentRound$.subscribe( round => {
+      if ( round ) {
+        this.currentVideo$.subscribe( video => {
+          if ( video ) {
+            this.canVote = video.round == round;
+          }
+        });
+      }
+    });
+      
     this.entries = [
       {
         id: 1
@@ -62,9 +79,8 @@ export class PerformerVideoComponent implements OnInit {
         });
       }
     });
-   
   }
-  
+    
   getCurrentUser() : User {
     return this.authService.user;
   }

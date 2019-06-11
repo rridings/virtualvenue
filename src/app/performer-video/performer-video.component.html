@@ -12,11 +12,11 @@
         <div *ngFor="let entry of entries; let idx = index">
           <div style="float:left;height:50px;">
             <label>
-              <input class="uk-radio" type="radio" [(ngModel)]="vote" [value]="entry.id"> {{ entry.id }}
+              <input class="uk-radio" type="radio" [(ngModel)]="vote" [value]="entry.id" [disabled]="!canVote"> {{ entry.id }}
             </label>
           </div>
         </div>
-        <div style="float:left;height:50px;padding-left: 10px;"><button (click)="onCastVote(getCurrentUser().role)">Cast Vote</button></div>
+        <div style="float:left;height:50px;padding-left: 10px;" *ngIf="canVote"><button [disabled]="" (click)="onCastVote(getCurrentUser().role)">Cast Vote</button></div>
       <div>&nbsp;</div>
     </div>
   </div>

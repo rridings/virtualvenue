@@ -19,6 +19,8 @@ export class CompetitionsService {
         this.store.patch({
           loading: false,
           name : data.name,
+          currentRound : data.current_round,
+          rounds : data.rounds,
         }, `competition subscription`)
       })
     ).subscribe()
@@ -32,4 +34,11 @@ export class CompetitionsService {
     return this.store.state$.pipe(map(state => state.name));
   }
 
+  get currentRound$(): Observable<number> {
+    return this.store.state$.pipe(map(state => state.currentRound));
+  }
+  
+  get rounds$(): Observable<number> {
+    return this.store.state$.pipe(map(state => state.rounds));
+  }
 }

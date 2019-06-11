@@ -12,6 +12,8 @@ export class CompetitionsPageStore extends StoreService<CompetitionsPage> {
         super({
             loading: true,
             name: '',
+            currentRound: 0,
+            rounds: 0,
         })
     }
 }

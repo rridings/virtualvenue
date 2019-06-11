@@ -4,4 +4,5 @@ export class Video {
   title: string;
   url: string;
   image_url : string;
+  round : number
 }
