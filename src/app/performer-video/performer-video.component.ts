@@ -18,9 +18,7 @@ import { take } from "rxjs/operators";
 })
 export class PerformerVideoComponent implements OnInit {
 
-  currentVideoUrl$ : Observable<string>;
-  
-  currentVideo : Video;
+  currentVideo$ : Observable<Video>;
   
   vote : number;
             
@@ -30,7 +28,7 @@ export class PerformerVideoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentVideoUrl$ = this.videosService.currentVideoUrl$;
+    this.currentVideo$ = this.videosService.currentVideo$;
        
     this.entries = [
       {
@@ -52,9 +50,7 @@ export class PerformerVideoComponent implements OnInit {
     
        // select the first one
     this.videosService.currentVideo$.subscribe( video => {
-      if ( video != null )
-      {
-        this.currentVideo = video;
+      if ( video != null ) {
         var role = this.authService.user.role;
         var getVoteSubscription = this.videosService.getVote(video.id, role.id).pipe(take(1)).subscribe( vote => {
           if ( vote ) {
@@ -76,20 +72,23 @@ export class PerformerVideoComponent implements OnInit {
   onCastVote(role : Role): void {
     console.log("User - " + role.user +  " Vote - " + this.vote);
   
-      var getVoteSubscription = this.videosService.getVote(this.currentVideo.id, role.id).pipe(take(1)).subscribe( vote => {
-        if ( vote ) {
-          vote.vote = this.vote;
-        }
-        else {
-          var vote = new Vote();
-          vote.role_id = role.id;
-          vote.video_id = this.currentVideo.id;
-          vote.vote = this.vote;
-        }
+    this.currentVideo$.subscribe( video => {
+      if ( video != null ) {
+        var getVoteSubscription = this.videosService.getVote(video.id, role.id).pipe(take(1)).subscribe( vote => {
+          if ( vote ) {
+            vote.vote = this.vote;
+          }
+          else {
+            var vote = new Vote();
+            vote.role_id = role.id;
+            vote.video_id = video.id;
+            vote.vote = this.vote;
+          }
         
-        this.videosService.castVote(vote);
-        getVoteSubscription.unsubscribe();
-      });
-    
+          this.videosService.castVote(vote);
+          getVoteSubscription.unsubscribe();
+        });
+      }
+    });
   }
 }

@@ -12,7 +12,7 @@ export class VideosPageStore extends StoreService<VideosPage> {
         super({
             loading: true,
             videos: [],
-            currentVideoUrl: '',
+            currentVideo: null,
             formStatus: '',
         })
     }

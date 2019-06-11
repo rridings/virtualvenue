@@ -28,7 +28,7 @@ export class VideosService {
         this.store.patch({
           loading: false,
           videos,
-          currentVideoUrl: '',
+          currentVideo: null,
         }, `videos collection subscription`)
       })
     ).subscribe();
@@ -47,22 +47,13 @@ export class VideosService {
     return this.store.state$.pipe(map(state => state.formStatus));
   }
   
-  get currentVideoUrl$() : Observable<string> { 
-    return this.store.state$.pipe(map(state => state.currentVideoUrl))
-  }
-  
-  set currentVideoUrl(url : string) {
-    this.store.patch({ currentVideoUrl : url }, "set current video url");
-  }
-      
   get currentVideo$() : Observable<Video> { 
-    return this._currentVideo;
+    return this.store.state$.pipe(map(state => state.currentVideo))
   }
   
   set currentVideo(video : Video) {
-    this._currentVideo.next(video);
+    this.store.patch({ currentVideo : video }, "set current video");
   }
-      
         
   create(video: Video) {
     this.store.patch({ loading: true, videos: [], formStatus: 'Saving...' }, "video create")

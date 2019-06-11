@@ -3,6 +3,6 @@ export interface VideosPage {
 
    loading: boolean;
    videos: Video[];
-   currentVideoUrl : string;
+   currentVideo : Video;
    formStatus: string;
 }
