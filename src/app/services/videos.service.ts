@@ -2,8 +2,8 @@ import { VideosPageStore } from './videos-page.store';
 import { VideosFirestore } from './videos.firestore';
 import { VoteFirestore } from './vote.firestore';
 import { Injectable } from '@angular/core';
-import { Observable, from, BehaviorSubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { Observable, from, BehaviorSubject, Subject } from 'rxjs';
+import { tap, map, takeUntil } from 'rxjs/operators';
 import { Video } from '../model/video';
 import { Vote } from '../model/vote';
 
@@ -11,6 +11,8 @@ import { Vote } from '../model/vote';
   providedIn: 'root'
 })
 export class VideosService {
+  
+  destroy$: Subject<boolean> = new Subject<boolean>();
   
   private performer_id : string;
   
@@ -31,7 +33,7 @@ export class VideosService {
           currentVideo: null,
         }, `videos collection subscription`)
       })
-    ).subscribe();
+    ).pipe(takeUntil(this.destroy$)).subscribe();
     this.performer_id = performer_id;
   }
 
@@ -83,5 +85,12 @@ export class VideosService {
       
   getVote(video_id : string, role_id : string) : Observable<Vote> {
     return this.voteFirestore.collection$(ref => ref.where('video_id', '==', video_id).where('role_id', '==', role_id).limit(1)).pipe(map( votes => { return votes[0] } ));
-  }   
+  }  
+  
+    
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    // Now let's also unsubscribe from the subject itself:
+    this.destroy$.unsubscribe();
+  } 
 }

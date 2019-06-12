@@ -1,8 +1,8 @@
 import { PerformersPageStore } from './performers-page.store';
 import { PerformersFirestore } from './performers.firestore';
 import { Injectable } from '@angular/core';
-import { Observable, from, BehaviorSubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { Observable, from, BehaviorSubject, Subject } from 'rxjs';
+import { tap, map, takeUntil } from 'rxjs/operators';
 import { Performer } from '../model/performer';
 
 
@@ -11,6 +11,8 @@ import { Performer } from '../model/performer';
 })
 export class PerformersService {
 
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  
   constructor(
     private firestore: PerformersFirestore,
     private store: PerformersPageStore
@@ -23,7 +25,7 @@ export class PerformersService {
           totalPerformers: performers.length,
         }, `performers collection subscription`)
       })
-    ).subscribe()
+    ).pipe(takeUntil(this.destroy$)).subscribe()
   }
 
   get performers$(): Observable<Performer[]> {
@@ -73,5 +75,11 @@ export class PerformersService {
     return this.firestore.delete(id).catch(err => {
       this.store.patch({ loading: false, formStatus: 'An error ocurred' }, "performer delete ERROR")
     })
+  }
+  
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    // Now let's also unsubscribe from the subject itself:
+    this.destroy$.unsubscribe();
   }
 }

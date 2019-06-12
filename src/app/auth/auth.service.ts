@@ -89,7 +89,7 @@ export class AuthService {
       }
 
       if (!self.user && profile) {
-        var getUserSubscription = self.userService.getUser(profile.email).subscribe( user => {
+        var getUserSubscription = self.userService.getUser(profile.email).pipe(take(1)).subscribe( user => {
           if ( user ) {
             self.user = user;
             self.user.last_login = Date.now();

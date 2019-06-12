@@ -1,15 +1,17 @@
 import { CompetitionsPageStore } from './competitions-page.store';
 import { CompetitionsFirestore } from './competitions.firestore';
 import { Injectable } from '@angular/core';
-import { Observable, from, BehaviorSubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { Observable, from, BehaviorSubject, Subject } from 'rxjs';
+import { tap, map, takeUntil } from 'rxjs/operators';
 import { Competition } from '../model/competition';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompetitionsService {
-      
+   
+  destroy$: Subject<boolean> = new Subject<boolean>();
+    
   constructor(
     private firestore: CompetitionsFirestore,
     private store: CompetitionsPageStore
@@ -23,7 +25,7 @@ export class CompetitionsService {
           rounds : data.rounds,
         }, `competition subscription`)
       })
-    ).subscribe()
+    ).pipe(takeUntil(this.destroy$)).subscribe()
   }
 
   get loading$(): Observable<boolean> {
@@ -40,5 +42,11 @@ export class CompetitionsService {
   
   get rounds$(): Observable<number> {
     return this.store.state$.pipe(map(state => state.rounds));
+  }
+  
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    // Now let's also unsubscribe from the subject itself:
+    this.destroy$.unsubscribe();
   }
 }
