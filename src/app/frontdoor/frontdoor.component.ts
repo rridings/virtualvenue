@@ -12,6 +12,7 @@ export class FrontdoorComponent implements OnInit {
   }
 
   ngOnInit() {
+    localStorage.removeItem('route');
   }
 
 }

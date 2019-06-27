@@ -69,21 +69,23 @@ export class PerformerVideoComponent implements OnInit {
        // select the first one
     this.videosService.currentVideo$.pipe(takeUntil(this.destroy$)).subscribe( video => {
       if ( video != null ) {
-        var role = this.authService.user.role;
-        this.videosService.getVote(video.id, role.id).pipe(take(1)).subscribe( vote => {
-          if ( vote ) {
-            this.vote = vote.vote;
-          }
-          else {
-            this.vote = 0;
-          }
+        this.authService.user$.pipe(takeUntil(this.destroy$)).subscribe( user => {
+          var role = user.role;
+          this.videosService.getVote(video.id, role.id).pipe(take(1)).subscribe( vote => {
+            if ( vote ) {
+              this.vote = vote.vote;
+            }
+            else {
+              this.vote = 0;
+            }
+          });
         });
       }
     });
   }
     
-  getCurrentUser() : User {
-    return this.authService.user;
+  getCurrentUser() : Observable<User> {
+    return this.authService.user$;
   }
     
   onCastVote(role : Role): void {

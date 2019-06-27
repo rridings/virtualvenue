@@ -60,6 +60,12 @@ export class PerformersService {
     this.store.patch({ currentPerformer : performer }, "set current performer - " + performer.name);
   }
   
+  getPerformer(user_id: string) : Observable<Performer> {
+    return this.firestore.collection$(ref => ref.where('user_id', '==', user_id).limit(1)).pipe(map( performers => { 
+      return performers[0] 
+    } ));
+  }
+  
   create(performer: Performer) {
     this.store.patch({ loading: true, performers: [], formStatus: 'Saving...' }, "performer create")
     return this.firestore.add(performer).then(_ => {

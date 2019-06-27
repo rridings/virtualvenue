@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   noResults$: Observable<boolean>; 
   currentPerformer$: Observable<Performer>;
   
-  constructor(public auth: AuthService, private performers: PerformersService, private videos: VideosService) { }
+  constructor(public authService: AuthService, private performers: PerformersService, private videos: VideosService) { }
 
   ngOnInit() {
     this.loading$ = this.performers.loading$;

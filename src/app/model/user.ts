@@ -7,4 +7,5 @@ export class User {
   picture: string;
   last_login: number;
   role: Role;
+  performer_id: string;
 }

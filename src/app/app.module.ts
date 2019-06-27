@@ -6,29 +6,32 @@ import { RouterModule } from '@angular/router';
 import { AngularFireModule } from '@angular/fire'
 import { AngularFirestoreModule } from '@angular/fire/firestore'
 import { environment } from '../environments/environment';
-import { ROUTES } from './app.routes';
-import { AuthService } from './auth/auth.service';
-import { AuthGuard } from './auth/auth.guard';
-import { SafePipe } from './core/safe.pipe';
-import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { CallbackComponent } from './callback/callback.component';
-import { BackstageComponent } from './backstage/backstage.component';
-import { FrontdoorComponent } from './frontdoor/frontdoor.component';
-import { PerformerVideoComponent } from './performer-video/performer-video.component';
-import { PerformerVideoListComponent } from './performer-video-list/performer-video-list.component';
+import { ROUTES } from 'app/app.routes';
+import { AuthService } from 'app/auth/auth.service';
+import { AuthGuard } from 'app/auth/auth.guard';
+import { RoleGuard } from 'app/auth/role.guard';
+import { SafePipe } from 'app/core/safe.pipe';
+import { AppComponent } from 'app/app.component';
+import { FrontdoorComponent } from 'app/frontdoor/frontdoor.component';
+import { HomeComponent } from 'app/home/home.component';
+import { CallbackComponent } from 'app/callback/callback.component';
+import { PerformerVideoComponent } from 'app/performer-video/performer-video.component';
+import { PerformerVideoListComponent } from 'app/performer-video-list/performer-video-list.component';
+import { BackstageHomeComponent } from './backstage/backstagehome/backstagehome.component';
+import { PerformerBioComponent } from './performerbio/performerbio.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     SafePipe,
+    FrontdoorComponent,
     HomeComponent,
     CallbackComponent,
-    BackstageComponent,
-    FrontdoorComponent,
     PerformerVideoComponent,
-    PerformerVideoListComponent
+    PerformerVideoListComponent,
+    BackstageHomeComponent,
+    PerformerBioComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +41,7 @@ import { PerformerVideoListComponent } from './performer-video-list/performer-vi
     AngularFirestoreModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [AuthService, AuthGuard],
+  providers: [AuthService, AuthGuard, RoleGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
