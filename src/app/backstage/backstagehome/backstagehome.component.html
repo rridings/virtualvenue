@@ -26,9 +26,14 @@
 
         <li class="uk-parent"><a href="#">Rounds</a>
          <ul style="list-style-type:none;">
-            <li *ngFor="let item of [].constructor(rounds$ | async); let i = index">
-              <a href="" (click)="onSelect(i+1)" [routerLink]="">Round {{i + 1}}</a>
-            </li>
+            <div *ngFor="let item of [].constructor((rounds$ | async)); let i = index">
+              <li *ngIf="(videos$ | async)[i]; let video">
+               <a href="" (click)="onSelect(video)" [routerLink]="">Round {{video.round}}</a>
+              </li>
+              <li *ngIf="!(videos$ | async)[i]">
+               Round {{i+1}}
+              </li>
+            </div>
           </ul>
         </li>
       </ul>
@@ -44,6 +49,7 @@
 
   <div class="uk-width-4-5" *ngIf="currentPerformer$ | async">
       <performer-bio></performer-bio>
+      <performer-video></performer-video>
   </div>
 
 </div>

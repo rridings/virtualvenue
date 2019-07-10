@@ -6,7 +6,7 @@
     </div>
   </div>
 
-  <div  class="uk-modal-footer uk-text-right" *ngIf="getCurrentUser().role.type == 2">
+  <div  class="uk-modal-footer uk-text-right" *ngIf="(getCurrentUser() | async).role.type == 2">
     <div class="uk-child-width-expand@s uk-text-center" uk-grid>
         <div>&nbsp;</div>  
         <div *ngFor="let entry of entries; let idx = index">

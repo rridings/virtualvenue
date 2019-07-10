@@ -20,7 +20,6 @@ import { PerformerVideoListComponent } from 'app/performer-video-list/performer-
 import { BackstageHomeComponent } from './backstage/backstagehome/backstagehome.component';
 import { PerformerBioComponent } from './performerbio/performerbio.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +30,7 @@ import { PerformerBioComponent } from './performerbio/performerbio.component';
     PerformerVideoComponent,
     PerformerVideoListComponent,
     BackstageHomeComponent,
-    PerformerBioComponent
+    PerformerBioComponent,
   ],
   imports: [
     BrowserModule,
