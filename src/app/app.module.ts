@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -19,6 +20,7 @@ import { PerformerVideoComponent } from 'app/performer-video/performer-video.com
 import { PerformerVideoListComponent } from 'app/performer-video-list/performer-video-list.component';
 import { BackstageHomeComponent } from './backstage/backstagehome/backstagehome.component';
 import { PerformerBioComponent } from './performerbio/performerbio.component';
+import { UploadVideoComponent } from './backstage/upload-video/upload-video.component';
 
 @NgModule({
   declarations: [
@@ -31,10 +33,12 @@ import { PerformerBioComponent } from './performerbio/performerbio.component';
     PerformerVideoListComponent,
     BackstageHomeComponent,
     PerformerBioComponent,
+    UploadVideoComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,

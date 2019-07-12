@@ -14,7 +14,9 @@ import { Vote } from 'app/model/vote';
 @Component({
   selector: 'performer-video',
   templateUrl: './performer-video.component.html',
-  styleUrls: ['./performer-video.component.css']
+  styleUrls: ['./performer-video.component.css',
+              '../../../node_modules/uikit/dist/css/uikit.min.css',
+              '../../../node_modules/uikit/dist/css/uikit-core.min.css']
 })
 export class PerformerVideoComponent implements OnInit {
 

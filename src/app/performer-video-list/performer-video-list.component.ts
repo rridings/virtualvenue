@@ -11,7 +11,9 @@ import { Video } from 'app/model/video';
 @Component({
   selector: 'performer-video-list',
   templateUrl: './performer-video-list.component.html',
-  styleUrls: ['./performer-video-list.component.css']
+  styleUrls: ['./performer-video-list.component.css',
+              '../../../node_modules/uikit/dist/css/uikit.min.css',
+              '../../../node_modules/uikit/dist/css/uikit-core.min.css']
 })
 export class PerformerVideoListComponent implements OnInit {
   loading$: Observable<boolean>;

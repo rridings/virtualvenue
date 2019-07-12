@@ -31,7 +31,7 @@
                <a href="" (click)="onSelect(video)" [routerLink]="">Round {{video.round}}</a>
               </li>
               <li *ngIf="!(videos$ | async)[i]">
-               Round {{i+1}}
+               <a href="" (click)="onShowUploadVideo()" [routerLink]="">Round {{i+1}}</a>
               </li>
             </div>
           </ul>
@@ -49,7 +49,9 @@
 
   <div class="uk-width-4-5" *ngIf="currentPerformer$ | async">
       <performer-bio></performer-bio>
+      <br>
       <performer-video></performer-video>
+      <upload-video [display]="showUploadVideo"></upload-video>
   </div>
 
 </div>

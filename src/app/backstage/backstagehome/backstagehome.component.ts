@@ -21,6 +21,7 @@ export class BackstageHomeComponent implements OnInit {
   currentRound$: Observable<number>;
   currentPerformer$: Observable<Performer>;
   videos$: Observable<Video[]>;
+  showUploadVideo : boolean = false;
   
   constructor(public authService: AuthService, private competitonsService: CompetitionsService, private performersService: PerformersService, private videosService: VideosService) { }
 
@@ -47,5 +48,12 @@ export class BackstageHomeComponent implements OnInit {
   onSelect(video: Video): void {
     console.log("Selected video - " + video.url);
     this.videosService.currentVideo = video;
+    this.showUploadVideo = false;
   }
+  
+  onShowUploadVideo(): void {
+    this.videosService.currentVideo = null;
+    this.showUploadVideo = true;
+  }
+  
 }

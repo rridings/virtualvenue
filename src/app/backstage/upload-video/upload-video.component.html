@@ -1,0 +1,25 @@
+<div class="uk-container" *ngIf="display">
+  <form [formGroup] ="uploadVideoForm" (ngSubmit) = "onSubmit()">
+  <table class="uk-table">
+    <thead>
+        <tr>
+            <th>Upload Video</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><input class="uk-input uk-form-width-large" type="text" formControlName="title" placeholder="Title"></td>
+        </tr>
+        <tr>
+            <td><input class="uk-input uk-form-width-large" type="text" formControlName="url" placeholder="URL"></td>
+        </tr>
+        <tr>
+            <td><input class="uk-input uk-form-width-large" type="text" formControlName="imageUrl" placeholder="Image URL"></td>
+        </tr>
+        <tr>
+            <td><button class="btn btn-primary my-2 my-sm-0" type="submit" [disabled]="uploadVideoForm.invalid">Submit</button></td>
+        </tr>
+    </tbody>
+  </table>
+  </form>
+</div>
