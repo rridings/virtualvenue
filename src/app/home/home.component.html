@@ -26,9 +26,16 @@
         </li>
 
         <li class="uk-parent"><a href="#">Performers</a>
-          <ul class="performers">
-            <li *ngFor="let performer of performers$ | async">
-              <a href="" (click)="onSelect(performer)" [routerLink]="">{{performer.name}}</a>
+          <ul style="list-style-type:none;"  uk-accordion="collapsible: true" class="performers">
+            <li class="uk-parent" *ngFor="let performer of performers$ | async">
+              <a class="uk-accordion-title" href="" (click)="onSelectPerformer(performer)" [routerLink]="">{{performer.name}}</a>
+              <ul class="uk-accordion-content" style="list-style-type:none;">
+                <div *ngFor="let item of [].constructor((rounds$ | async)); let i = index">
+                  <li *ngIf="(videos$ | async)[i]; let video">
+                    <a href="" (click)="onSelectVideo(video)" [routerLink]="">Round {{video.round}}</a>
+                  </li>
+                </div>
+              </ul>
             </li>
           </ul>
         </li>
@@ -45,9 +52,8 @@
 
   <div class="uk-width-4-5" *ngIf="currentPerformer$ | async">
       <performer-bio></performer-bio>
+      <br>
       <performer-video></performer-video>
-      <hr>
-      <performer-video-list></performer-video-list>
   </div>
 
 </div>

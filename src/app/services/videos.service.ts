@@ -25,7 +25,7 @@ export class VideosService {
   ) {}
   
   init(performer_id : string) {
-    this.videoFirestore.collection$(ref => ref.where('performer_id', '==', performer_id)).pipe(
+    this.videoFirestore.collection$(ref => ref.where('performer_id', '==', performer_id).orderBy('round')).pipe(
       tap(videos => {
         this.store.patch({
           loading: false,

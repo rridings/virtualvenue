@@ -17,7 +17,6 @@ import { FrontdoorComponent } from 'app/frontdoor/frontdoor.component';
 import { HomeComponent } from 'app/home/home.component';
 import { CallbackComponent } from 'app/callback/callback.component';
 import { PerformerVideoComponent } from 'app/performer-video/performer-video.component';
-import { PerformerVideoListComponent } from 'app/performer-video-list/performer-video-list.component';
 import { BackstageHomeComponent } from './backstage/backstagehome/backstagehome.component';
 import { PerformerBioComponent } from './performerbio/performerbio.component';
 import { UploadVideoComponent } from './backstage/upload-video/upload-video.component';
@@ -30,7 +29,6 @@ import { UploadVideoComponent } from './backstage/upload-video/upload-video.comp
     HomeComponent,
     CallbackComponent,
     PerformerVideoComponent,
-    PerformerVideoListComponent,
     BackstageHomeComponent,
     PerformerBioComponent,
     UploadVideoComponent,

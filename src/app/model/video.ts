@@ -3,6 +3,5 @@ export class Video {
   performer_id: string;
   title: string;
   url: string;
-  image_url : string;
   round : number
 }
