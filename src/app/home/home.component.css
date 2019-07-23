@@ -2,11 +2,11 @@ a {
   cursor: pointer;
 }
 
-.uk-accordion-title:after{
-      background-image:none;
+a.uk-accordion-title::before{
+  background-image:none;
 }
-.uk-open{
-      .uk-accordion-title:after{
-              background-image:none;
-      }
+
+.uk-open>a.uk-accordion-title::before{
+  background-image:none;
 }
+
