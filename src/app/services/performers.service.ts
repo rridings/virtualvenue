@@ -76,6 +76,16 @@ export class PerformersService {
     })
   }
 
+  update(performer: Performer) {
+    this.store.patch({ loading: true, performers: [], formStatus: 'Saving...' }, "performer save")
+    return this.firestore.update(performer.id, performer).then(_ => {
+      this.store.patch({ formStatus: 'Saved!' }, "employee create SUCCESS")
+      setTimeout(() => this.store.patch({ formStatus: '' }, "performer save timeout reset formStatus"), 2000)
+    }).catch(err => {
+      this.store.patch({ loading: false, formStatus: 'An error ocurred' }, "performer save ERROR")
+    }) 
+  }
+  
   delete(id: string): any {
     this.store.patch({ loading: true, performers: [] }, "performer delete")
     return this.firestore.delete(id).catch(err => {

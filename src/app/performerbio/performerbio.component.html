@@ -1,2 +1,27 @@
-<div class="uk-text-center uk-h2">{{(currentPerformer$ | async)?.name}}</div>  
-<div [innerHTML]="(currentPerformer$ | async)?.bio"></div>
+<div class="uk-container" *ngIf="!(edit$ | async)">
+  <div class="uk-text-center uk-h2">{{(currentPerformer$ | async)?.name}}&nbsp;<a href="" (click)="onEdit()" *ngIf="showEdit() | async" [routerLink]=""><img src="assets/img/edit-12.png"></a></div>  
+  <div [innerHTML]="(currentPerformer$ | async)?.bio"></div>
+</div>
+
+<div class="uk-container" *ngIf="edit$ | async">
+  <form [formGroup] ="performerBioForm" (ngSubmit) = "onSubmit()">
+  <table class="uk-table">
+    <thead>
+        <tr>
+            <th>Performer Information</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><input class="uk-input uk-form-width-large" type="text" formControlName="name" placeholder="Name" formControlName="name" value="(currentPerformer$ | async).name"></td>
+        </tr>
+        <tr>
+            <td><textarea class="uk-textarea uk-form-width-large" type="text" formControlName="bio">{{(currentPerformer$ | async).bio}}</textarea></td>
+        </tr>
+        <tr>
+            <td><button class="btn btn-primary my-2 my-sm-0" type="submit" [disabled]="performerBioForm.invalid">Submit</button></td>
+        </tr>
+    </tbody>
+  </table>
+  </form>
+</div>

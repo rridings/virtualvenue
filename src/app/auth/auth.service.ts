@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AUTH_CONFIG } from './auth0-variables';
 import { Router } from '@angular/router';
-import { Observable, from, ReplaySubject, of } from 'rxjs';
+import { Observable, from, BehaviorSubject, of } from 'rxjs';
 import { timer as observableTimer} from 'rxjs';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/filter';
@@ -19,7 +19,7 @@ export class AuthService {
   private _accessToken: string;
   private _expiresAt: number;
    
-  private _user$ = new ReplaySubject<User>(); 
+  private _user$ : BehaviorSubject<User>; 
   
   refreshSubscription: any;
 
@@ -37,10 +37,10 @@ export class AuthService {
     this._expiresAt = 0;
   }
 
-  get user$() : Observable<User> { 
-    return this._user$.asObservable();
-  }
-
+  get user() : User { 
+    return this._user$.value;
+  } 
+  
   get accessToken(): string {
     return this._accessToken;
   }
@@ -61,7 +61,6 @@ export class AuthService {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.localLogin(authResult);
-        this.router.navigate([localStorage.getItem('route')]);
       } else if (err) {
         this.router.navigate([localStorage.getItem('route')]);
         console.log(err);
@@ -103,8 +102,11 @@ export class AuthService {
               if ( role ) {
                 user.role = role;
               }
+              
               getRoleSubscription.unsubscribe();
-              self._user$.next(user);
+              
+              self._user$ = new BehaviorSubject<User>(user); 
+              this.router.navigate([localStorage.getItem('route')]);
             });
           }
           else {
@@ -130,8 +132,10 @@ export class AuthService {
                   if ( r ) {
                     user.role = role;
                   }
-                  self._user$.next(user);
-                });
+                  
+                  self._user$ = new BehaviorSubject<User>(user); 
+                  this.router.navigate([localStorage.getItem('route')]);
+              });
               }
             });
           }
@@ -157,7 +161,9 @@ export class AuthService {
     else {
       this.router.navigate(['/']);
     }
-    this._user$.next(null);
+    
+    if ( this._user$ )
+      this._user$.next(null);
   }
 
   public renewTokens(): void {

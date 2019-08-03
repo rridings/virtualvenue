@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { take } from "rxjs/operators";
 import { AuthService } from 'app/auth/auth.service';
 import { CompetitionsService } from 'app/services/competitions.service';
 import { VideosService } from 'app/services/videos.service';
@@ -21,7 +22,7 @@ export class BackstageHomeComponent implements OnInit {
   currentRound$: Observable<number>;
   currentPerformer$: Observable<Performer>;
   videos$: Observable<Video[]>;
-  showUploadVideo : boolean = false;
+  showUploadVideo$ : Observable<boolean>;
   
   constructor(public authService: AuthService, private competitonsService: CompetitionsService, private performersService: PerformersService, private videosService: VideosService) { }
 
@@ -29,31 +30,30 @@ export class BackstageHomeComponent implements OnInit {
     this.rounds$ = this.competitonsService.rounds$;
     this.currentRound$ = this.competitonsService.currentRound$;
     this.videos$ = this.videosService.videos$;
+    this.showUploadVideo$ = this.videosService.showUploadVideo$;
     
     //unsubscribe
-    this.authService.user$.subscribe(user => {
-        if ( user && user.role && user.role.type == Role.PERFORMER) {
-          this.currentPerformer$ = this.performersService.getPerformer(user.id);
-          this.currentPerformer$.subscribe(performer => {
-            this.performersService.currentPerformer = performer;
+    var user = this.authService.user;
+    if ( user && user.role && user.role.type == Role.PERFORMER) {
+      this.currentPerformer$ = this.performersService.getPerformer(user.id);
+      this.currentPerformer$.pipe(take(1)).subscribe( performer => {
+        this.performersService.currentPerformer = performer;
             
-            console.log("Init VideosService with performer - " + performer.name);
-            this.videosService.init(performer.id);
-            
-          });
-        }
+        console.log("Init VideosService with performer - " + performer.name);
+        this.videosService.init(performer.id);        
       });
+    }
   }
   
   onSelect(video: Video): void {
     console.log("Selected video - " + video.url);
     this.videosService.currentVideo = video;
-    this.showUploadVideo = false;
+    this.videosService.showUploadVideo$.next(false);
   }
   
   onShowUploadVideo(): void {
     this.videosService.currentVideo = null;
-    this.showUploadVideo = true;
+    this.videosService.showUploadVideo$.next(true);
   }
   
 }

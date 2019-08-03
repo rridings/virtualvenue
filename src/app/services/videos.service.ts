@@ -17,6 +17,8 @@ export class VideosService {
   private performer_id : string;
   
   private _currentVideo = new BehaviorSubject(null);
+  
+  showUploadVideo$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private videoFirestore: VideosFirestore,
@@ -29,8 +31,7 @@ export class VideosService {
       tap(videos => {
         this.store.patch({
           loading: false,
-          videos,
-          currentVideo: null,
+          videos
         }, `videos collection subscription`)
       })
     ).pipe(takeUntil(this.destroy$)).subscribe();

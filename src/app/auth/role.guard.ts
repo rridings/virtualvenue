@@ -11,14 +11,13 @@ export class RoleGuard implements CanActivate {
   
     constructor(private authService:AuthService, private router: Router) { }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-      return this.authService.user$.map(user => {
-        if ( user && user.role && user.role.type == Role.PERFORMER) {
-            return true;
-          } else {
-            this.router.navigate(['/home']);
-            return false;
-          }
-      }).take(1)
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+      var user = this.authService.user;
+      if ( user && user.role && user.role.type == Role.PERFORMER) {
+        return true;
+      } else {
+        this.router.navigate(['/home']);
+        return false;
+      }
     }   
 }

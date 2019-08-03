@@ -39,6 +39,7 @@ export class HomeComponent implements OnInit {
   onSelectPerformer(performer: Performer): void {
     this.videosService.init(performer.id);
     this.performers.currentPerformer = performer;
+    this.videosService.currentVideo = null;
   }
 
   onSelectVideo(video: Video): void {
